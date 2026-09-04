@@ -4,8 +4,8 @@
 Je suis Dev 1 sur le projet Dotobase. Je gère les fondations, l'authentification et le dashboard.
 
 ## Mes modules
-- M0 : Setup projet (Next.js, theme, composants UI, config Supabase, config tests, CI/CD)
-- M1 : Auth (login NPI + mot de passe, OTP SMS, sélection établissement)
+- M0 : Setup projet (Next.js, theme, composants UI, client API backend, config tests, CI/CD)
+- M1 : Auth (login téléphone + mot de passe côté staff — le NPI n'est plus un identifiant de connexion et l'OTP est réservé au login patient)
 - M2 : Dashboard (gestion consultations, stats, alertes, modale recherche patient)
 - Infrastructure : migrations SQL, types TypeScript, seed data, GitLab CI/CD
 
@@ -37,9 +37,9 @@ chore: description
 ```
 
 ## Stack
-Next.js 15, TypeScript, Tailwind CSS, Supabase, Vitest, Playwright.
+Next.js 15, TypeScript, Tailwind CSS, API NestJS (dépôt `dotobase-backend`), Vitest, Playwright.
 Dossier webapp : `DEV/webapp/`
-Migrations SQL : `packages/supabase/migrations/`
+Schéma SQL et migrations : dans `dotobase-backend/supabase/migrations/` (la webapp n'accède plus à Supabase).
 
 ## Commandes
 ```bash
@@ -64,14 +64,13 @@ src/components/ui/                     # Tous les composants UI de base
 src/components/layout/                 # Sidebar, Header, SearchModal (P05)
 src/components/auth/                   # LoginForm, OtpInput
 src/components/dashboard/              # StatCards, AlertPanel, ActivityTimeline
-src/lib/supabase/                      # Client, server, middleware
+src/lib/api/                           # Client de l'API Nest (auth, ressources, types)
 src/lib/hooks/use-auth.ts
 src/lib/actions/auth.actions.ts
 src/lib/utils/validators.ts
 src/test/                              # Setup tests + helpers partagés
 e2e/auth.spec.ts
 e2e/dashboard.spec.ts
-packages/supabase/
 vitest.config.ts
 playwright.config.ts
 .gitlab-ci.yml
@@ -101,11 +100,12 @@ Fichier test à côté du fichier testé : `button.tsx` → `button.test.tsx`
 - Composant React → rendu + interaction (Testing Library)
 - Hook → retour et effets (Vitest)
 - Fonction utilitaire → test unitaire (Vitest)
-- Server Action → mock Supabase (Vitest)
+- Appel API / Server Action → mock du backend (Vitest)
 - Flux complet → E2E (Playwright, dans e2e/)
 
-### Mock Supabase
-Utilise `src/test/helpers/mock-supabase.ts`
+### Mock du backend
+`src/test/helpers/mock-api.ts` (`mockFetchRoutes({ 'GET /v1/patients': [...] })`)
+et `src/test/helpers/mock-auth.ts` (`mockAuthContext()`) pour un utilisateur connecté.
 
 ## Règles de code
 - Zod pour la validation

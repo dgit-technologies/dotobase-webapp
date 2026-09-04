@@ -1,52 +1,40 @@
-import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { SESSION_HINT_COOKIE } from '@/lib/api/config';
 
-const PUBLIC_ROUTES = ['/login', '/otp'];
+const PUBLIC_ROUTES = ['/', '/login', '/otp'];
 
-export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  const { data: { user } } = await supabase.auth.getUser();
+/**
+ * Garde de routes (proxy Next.js 16, ex-middleware).
+ *
+ * La session vit désormais côté backend Nest : l'access token n'existe qu'en
+ * mémoire du navigateur et le refresh token est un cookie HttpOnly limité au
+ * chemin `/v1/auth/refresh` de l'API — donc jamais envoyé ici. Le proxy ne
+ * peut voir que le cookie témoin posé au login (voir lib/api/token.ts). Il
+ * sert d'indice, pas de preuve : la vraie vérification est faite par le
+ * backend sur chaque appel (JWT + rôles), et par AuthProvider qui vide la
+ * session si le refresh échoue.
+ */
+export function proxy(request: NextRequest) {
+  const hasSession = request.cookies.get(SESSION_HINT_COOKIE)?.value === '1';
 
   const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_ROUTES.some((r) => pathname.startsWith(r));
+  const isPublic = pathname === '/' || PUBLIC_ROUTES.some((route) => route !== '/' && pathname.startsWith(route));
 
-  if (!user && !isPublic) {
+  if (!hasSession && !isPublic) {
     // Prototype mode: bypass redirect
     // const loginUrl = request.nextUrl.clone();
     // loginUrl.pathname = '/login';
     // return NextResponse.redirect(loginUrl);
   }
 
-  if (user && isPublic) {
+  if (hasSession && isPublic) {
     // Prototype mode: bypass redirect
     // const dashboardUrl = request.nextUrl.clone();
     // dashboardUrl.pathname = '/dashboard';
     // return NextResponse.redirect(dashboardUrl);
   }
 
-  return supabaseResponse;
+  return NextResponse.next({ request });
 }
 
 export const config = {

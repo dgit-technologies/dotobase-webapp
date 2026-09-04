@@ -3,37 +3,42 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { IdCard, Lock, Eye, EyeOff, ShieldCheck, LogIn, CircleHelp } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { Phone, Lock, Eye, EyeOff, ShieldCheck, LogIn, CircleHelp } from "lucide-react";
+import { useAuth } from "@/lib/hooks/use-auth";
+import { toDisplayMessage } from "@/lib/api";
+import { EXEMPLE_TELEPHONE, loginSchema, premiereErreur } from "@/lib/utils/validators";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [npi, setNpi] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  const { login } = useAuth();
 
+  // Connexion staff : téléphone + mot de passe (POST /v1/auth/login).
+  // Le NPI n'est plus un identifiant de connexion, et il n'y a pas d'OTP
+  // côté personnel — l'OTP est réservé au login patient (app mobile).
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    const saisie = loginSchema.safeParse({ telephone, password });
+    if (!saisie.success) {
+      setError(premiereErreur(saisie.error));
+      return;
+    }
+
     setIsLoading(true);
 
-    const syntheticEmail = `${npi}@npi.dotobase.local`;
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({
-      email: syntheticEmail,
-      password: password,
-    });
-
-    if (signInError) {
-      console.log("Auth failed, but navigating in prototype mode anyway");
-    } else {
-      console.log("Login successful:", data);
+    try {
+      await login(saisie.data);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(toDisplayMessage(err));
+      setIsLoading(false);
     }
-    
-    // Prototype mode: Redirect to the OTP page regardless of real auth for smooth flow
-    router.push("/otp");
   };
 
   return (
@@ -47,7 +52,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 relative flex items-center justify-center">
           <Image 
-            src="/logo.png" 
+            src="/logo.svg" 
             alt="Dotobase Logo" 
             width={120} 
             height={120} 
@@ -69,21 +74,22 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* NPI Field */}
+            {/* Telephone Field */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-gray-700 tracking-wide">
-                NPI (Identifiant National)
+                Téléphone
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                  <IdCard className="h-5 w-5" strokeWidth={1.5} />
+                  <Phone className="h-5 w-5" strokeWidth={1.5} />
                 </div>
                 <input
-                  type="text"
+                  type="tel"
                   required
-                  value={npi}
-                  onChange={(e) => setNpi(e.target.value)}
-                  placeholder="Numéro à 10 chiffres"
+                  autoComplete="tel"
+                  value={telephone}
+                  onChange={(e) => setTelephone(e.target.value)}
+                  placeholder={EXEMPLE_TELEPHONE}
                   className="block w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1E95CB]/20 focus:border-[#1E95CB] placeholder:text-gray-400 transition-colors bg-gray-50/30"
                 />
               </div>
@@ -106,6 +112,7 @@ export default function LoginPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   required
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full pl-10 pr-10 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1E95CB]/20 focus:border-[#1E95CB] transition-colors bg-gray-50/30"

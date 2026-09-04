@@ -1,26 +1,32 @@
-import { vi } from "vitest";
+import { vi } from 'vitest';
+import type { AuthContextValue } from '@/components/auth/AuthProvider';
+import { mockEtablissement, mockMedecin } from '@/test/helpers/mock-api';
 
-export const mockAuthUser = {
-  id: "mock-user-id",
-  npi: "1234567890",
-  nom: "Dr. Dupont",
-  prenom: "Jean",
-  specialite_id: "cardio-uuid",
-  role: "medecin" as const,
-};
+export { mockEtablissement, mockMedecin };
 
-export const mockEtablissement = {
-  id: "mock-etab-id",
-  nom: "Hôpital Central de Cotonou",
-};
-
-export function mockUseAuth() {
-  return vi.fn().mockReturnValue({
-    user: mockAuthUser,
+/**
+ * Valeur de contexte prête à l'emploi pour les composants qui consomment
+ * `useAuth()`.
+ *
+ * Exemple :
+ *   vi.mock('@/lib/hooks/use-auth', async (importOriginal) => ({
+ *     ...(await importOriginal<object>()),
+ *     useAuth: () => mockAuthContext(),
+ *   }));
+ */
+export function mockAuthContext(
+  overrides: Partial<AuthContextValue> = {}
+): AuthContextValue {
+  return {
+    user: mockMedecin,
+    role: mockMedecin.type,
+    specialiteId: 'specialite-uuid',
     etablissementActif: mockEtablissement,
-    specialiteId: mockAuthUser.specialite_id,
-    role: mockAuthUser.role,
     isLoading: false,
+    isAuthenticated: true,
+    login: vi.fn().mockResolvedValue(mockMedecin),
     signOut: vi.fn(),
-  });
+    reload: vi.fn().mockResolvedValue(undefined),
+    ...overrides,
+  };
 }

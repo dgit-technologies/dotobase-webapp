@@ -4,6 +4,19 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, ShieldCheck, BriefcaseMedical } from "lucide-react";
 
+/**
+ * ÉCRAN NON BRANCHÉ (maquette P02).
+ *
+ * Le backend Nest n'expose pas d'OTP pour le personnel : le staff se connecte
+ * en une étape (téléphone + mot de passe, voir /login). L'OTP existe côté
+ * backend uniquement pour les PATIENTS (`/v1/auth/otp/request` puis
+ * `/v1/auth/otp/verify`), qui se connectent depuis l'app mobile.
+ *
+ * Deux issues possibles, à trancher avec le produit :
+ * - supprimer cet écran du parcours webapp ;
+ * - ou demander au backend une seconde étape OTP pour le login staff, et
+ *   brancher cet écran sur `api.auth` (les appels existent déjà côté client).
+ */
 export default function OTPPage() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(120);

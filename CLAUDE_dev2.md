@@ -39,7 +39,8 @@ feature(M10): description [DOT-numero]
 ```
 
 ## Stack
-Next.js 15, TypeScript, Tailwind CSS, Supabase, Vitest, Playwright.
+Next.js 15, TypeScript, Tailwind CSS, API NestJS (dépôt `dotobase-backend`), Vitest, Playwright.
+Les données passent par `@/lib/api` (ex: `api.patients.list()`), plus par Supabase.
 Dossier webapp : `DEV/webapp/`
 
 ## Commandes
@@ -102,7 +103,7 @@ Fichier test à côté : `consultation-form.tsx` → `consultation-form.test.tsx
 ### Quoi tester
 - Composant → rendu + interaction (Testing Library)
 - Hook → retour + effets (Vitest)
-- Server Action → mock Supabase (Vitest)
+- Appel API / Server Action → mock du backend via `src/test/helpers/mock-api.ts` (Vitest)
 - Flux complet → E2E (Playwright)
 
 ### Mock auth (tant que M1 n'est pas terminé)

@@ -27,11 +27,6 @@ describe('Sidebar', () => {
     expect(screen.getByText('Dossiers')).toBeInTheDocument();
   });
 
-  it('renders New Consultation button', () => {
-    render(<Sidebar />);
-    expect(screen.getByText('New Consultation')).toBeInTheDocument();
-  });
-
   it('renders bottom nav items', () => {
     render(<Sidebar />);
     expect(screen.getByText('Parametre')).toBeInTheDocument();

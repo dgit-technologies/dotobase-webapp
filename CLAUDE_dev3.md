@@ -39,7 +39,9 @@ feature(M12): description [DOT-numero]
 ```
 
 ## Stack
-Next.js 15, TypeScript, Tailwind CSS, Supabase, Vitest, Playwright, pgTAP.
+Next.js 15, TypeScript, Tailwind CSS, API NestJS (dépôt `dotobase-backend`), Vitest, Playwright, pgTAP.
+Les données passent par `@/lib/api` (ex: `api.documents.list({ patient_id })`), plus par Supabase.
+Le SQL (migrations, policies RLS, tests pgTAP) vit désormais dans `dotobase-backend/supabase/`.
 Dossier webapp : `DEV/webapp/`
 
 ## Commandes
@@ -100,7 +102,7 @@ Fichier test à côté : `upload-zone.tsx` → `upload-zone.test.tsx`
 ### Quoi tester
 - Composant → rendu + interaction (Testing Library)
 - Hook → retour + effets (Vitest)
-- Server Action → mock Supabase (Vitest)
+- Appel API / Server Action → mock du backend via `src/test/helpers/mock-api.ts` (Vitest)
 - Flux complet → E2E (Playwright)
 - Policies RLS → pgTAP (packages/supabase/tests/)
 
