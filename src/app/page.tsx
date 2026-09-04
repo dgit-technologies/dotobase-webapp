@@ -1,241 +1,189 @@
 import React from "react";
 import Image from "next/image";
 import {
-  ShieldCheck,
-  FolderLock,
-  Stethoscope,
-  Users,
   ExternalLink,
   Sparkles,
-  Lock,
+  ShieldCheck,
+  Cpu,
+  Layers,
+  Clock,
   Activity,
+  CheckCircle2,
+  Wrench,
 } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#F5F9FD] via-[#FFFFFF] to-[#F0F6FC] text-[#0E1B2A] relative overflow-hidden">
-      {/* Background decorative soft glow effects */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-r from-blue-200/30 via-cyan-100/40 to-blue-200/30 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-1/3 -left-32 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-2/3 -right-32 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-[#0B1528] via-[#0D1F3C] to-[#081120] text-white relative overflow-hidden">
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-20 right-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Navigation Header */}
-      <header className="sticky top-0 z-30 w-full border-b border-[#E3EDF7]/80 bg-white/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-4">
-          {/* Logo & Brand */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center">
-              <Image
-                src="/logo.svg"
-                alt="Dotobase Logo"
-                width={42}
-                height={42}
-                className="object-contain"
-                priority
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-xl tracking-tight text-[#0053CD]">
-                Dotobase
-              </span>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-[#6E7C91]">
-                Health Systems
-              </span>
-            </div>
+      {/* Header */}
+      <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between z-10">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/10">
+            <Image
+              src="/logo.svg"
+              alt="Dotobase Logo"
+              width={34}
+              height={34}
+              className="object-contain"
+              priority
+            />
           </div>
-
-          {/* Navigation items / Actions */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Powered by DGIT Badge */}
-            <a
-              href="https://dgit-technologies.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#EAF2FC] text-[#0053CD] hover:bg-[#DDEAF9] transition-colors border border-[#CDE0F7]"
-              title="Visiter le site officiel de DGIT-TECHNOLOGIES"
-            >
-              <span>Powered by <strong className="font-bold">DGIT-TECHNOLOGIES</strong></span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+          <div className="flex flex-col">
+            <span className="font-extrabold text-xl tracking-tight text-white">
+              Dotobase
+            </span>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-cyan-300">
+              Health Systems
+            </span>
           </div>
         </div>
+
+        {/* Powered by pill in header */}
+        <a
+          href="https://dgit-technologies.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-blue-200"
+          title="Visiter DGIT-TECHNOLOGIES"
+        >
+          <span>powered by <strong className="text-white font-semibold">DGIT-TECHNOLOGIES</strong></span>
+          <ExternalLink className="w-3.5 h-3.5" />
+        </a>
       </header>
 
-      {/* Hero Section */}
-      <main className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 flex flex-col items-center text-center">
-        {/* Teaser Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 via-cyan-50 to-indigo-50 border border-blue-200/80 shadow-xs mb-8">
-          <Sparkles className="w-4 h-4 text-[#0053CD] animate-pulse" />
-          <span className="text-xs sm:text-sm font-semibold text-[#0053CD]">
-            Quelque chose de grand est en train d&apos;être construit...
+      {/* Main Content: Focused Under Construction message */}
+      <main className="flex-1 max-w-4xl mx-auto px-6 py-10 md:py-16 flex flex-col items-center text-center justify-center z-10">
+        {/* Status Indicator */}
+        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-400/30 backdrop-blur-md mb-8">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500" />
+          </span>
+          <Wrench className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="text-xs sm:text-sm font-semibold tracking-wide text-cyan-200 uppercase">
+            Plateforme en cours de développement
           </span>
         </div>
 
-        {/* Hero Title */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#0E1B2A] max-w-4xl leading-[1.15]">
-          Votre santé,{" "}
-          <span className="bg-gradient-to-r from-[#0053CD] via-[#146BFB] to-[#2B8A9E] bg-clip-text text-transparent">
-            votre contrôle
+        {/* Grand Headline */}
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight max-w-3xl leading-[1.15]">
+          Quelque chose de grand est en train{" "}
+          <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent">
+            d&apos;être construit...
           </span>
         </h1>
 
-        {/* Subtitle / Description de Dotobase */}
-        <p className="mt-6 text-base sm:text-lg md:text-xl text-[#4A5568] max-w-3xl font-normal leading-relaxed">
-          <strong className="text-[#0E1B2A] font-semibold">Dotobase</strong> est la
-          plateforme moderne de dossiers médicaux électroniques conçue pour centraliser,
-          sécuriser et fluidifier la prise en charge des patients. Elle permet aux
-          praticiens et structures de santé de collaborer en temps réel avec précision,
-          tout en garantissant à chaque patient la maîtrise totale de ses données.
+        <p className="mt-6 text-base sm:text-lg text-blue-100/80 max-w-2xl font-normal leading-relaxed">
+          Nos équipes travaillent activement à la finalisation et à l&apos;interconnexion
+          des APIs de la plateforme. Nous serons très bientôt prêts à vous accueillir.
         </p>
 
-        {/* CTAs */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+        {/* Qu'est-ce que Dotobase ? - Focus Box */}
+        <div className="mt-10 w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 text-left shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+            <Activity className="w-48 h-48 text-cyan-300" />
+          </div>
+
+          <div className="flex items-center gap-2.5 mb-3 text-cyan-300">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-xs uppercase tracking-wider font-bold">
+              À propos du projet
+            </span>
+          </div>
+
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
+            Qu&apos;est-ce que Dotobase ?
+          </h2>
+
+          <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed">
+            <strong className="text-white font-semibold">Dotobase</strong> est la
+            future plateforme nationale de dossiers médicaux électroniques (DME). Elle est
+            conçue pour unifier et sécuriser l&apos;ensemble du parcours de soins : centralisation
+            des antécédents, suivi des consultations, ordonnances dématérialisées et résultats
+            d&apos;examens. Elle offrira aux professionnels de santé un outil de travail collaboratif
+            et précis, tout en redonnant aux patients le contrôle exclusif de leurs données médicales.
+          </p>
+
+          {/* Development progress milestones */}
+          <div className="mt-6 pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-xl border border-white/5">
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <div className="text-xs">
+                <p className="font-semibold text-white">Sécurité & Chiffrement</p>
+                <p className="text-emerald-400/90 font-medium">100% Finalisé</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-xl border border-white/5">
+              <Cpu className="w-5 h-5 text-cyan-400 shrink-0 animate-pulse" />
+              <div className="text-xs">
+                <p className="font-semibold text-white">Intégration des APIs</p>
+                <p className="text-cyan-400/90 font-medium">En cours de finalisation</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-xl border border-white/5">
+              <Clock className="w-5 h-5 text-indigo-400 shrink-0" />
+              <div className="text-xs">
+                <p className="font-semibold text-white">Ouverture officielle</p>
+                <p className="text-indigo-300/90 font-medium">Bientôt disponible</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Central Powered by DGIT-TECHNOLOGIES CTA */}
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <span className="text-xs uppercase tracking-widest text-blue-300/70 font-semibold">
+            Développé et propulsé par
+          </span>
+
           <a
             href="https://dgit-technologies.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-white bg-[#0053CD] hover:bg-[#0043A8] shadow-md hover:shadow-lg transition-all text-base"
+            className="group inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-[#0053CD] hover:from-blue-500 hover:to-[#146BFB] text-white font-bold text-base shadow-lg shadow-blue-500/25 hover:shadow-cyan-500/30 transition-all border border-blue-400/30"
           >
-            <span>Découvrir DGIT-TECHNOLOGIES</span>
-            <ExternalLink className="w-4 h-4" />
+            <span>powered by DGIT-TECHNOLOGIES</span>
+            <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
-        </div>
 
-        {/* Security / Trust micro-banner */}
-        <div className="mt-8 flex items-center gap-2 text-xs text-[#6E7C91]">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          <span>Données de santé hautement sécurisées · Chiffrement de niveau médical</span>
-        </div>
-
-        {/* Feature Cards Grid */}
-        <div className="mt-16 sm:mt-20 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {/* Card 1 */}
-          <div className="bg-white rounded-2xl p-6 border border-[#E3EDF7] shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:border-blue-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#0053CD] flex items-center justify-center mb-4">
-              <FolderLock className="w-6 h-6" />
-            </div>
-            <h2 className="text-base font-bold text-[#0E1B2A] mb-2">
-              Dossier Médical Partagé
-            </h2>
-            <p className="text-sm text-[#6E7C91] leading-relaxed">
-              Centralisation complète de l&apos;historique clinique, consultations,
-              analyses et examens en un seul endroit sécurisé.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-white rounded-2xl p-6 border border-[#E3EDF7] shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:border-blue-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-xl bg-cyan-50 text-[#2B8A9E] flex items-center justify-center mb-4">
-              <Stethoscope className="w-6 h-6" />
-            </div>
-            <h2 className="text-base font-bold text-[#0E1B2A] mb-2">
-              Pratique Médicale Fluide
-            </h2>
-            <p className="text-sm text-[#6E7C91] leading-relaxed">
-              Outils intuitifs pour les médecins : diagnostic structuré, rédaction
-              rapide d&apos;ordonnances et suivi des traitements.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-white rounded-2xl p-6 border border-[#E3EDF7] shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:border-blue-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
-              <Lock className="w-6 h-6" />
-            </div>
-            <h2 className="text-base font-bold text-[#0E1B2A] mb-2">
-              Confidentialité Absolue
-            </h2>
-            <p className="text-sm text-[#6E7C91] leading-relaxed">
-              Protection maximale respectant le secret médical, avec traçabilité et
-              accès strictement accordés par le patient.
-            </p>
-          </div>
-
-          {/* Card 4 */}
-          <div className="bg-white rounded-2xl p-6 border border-[#E3EDF7] shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:border-blue-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-              <Users className="w-6 h-6" />
-            </div>
-            <h2 className="text-base font-bold text-[#0E1B2A] mb-2">
-              Contrôle pour le Patient
-            </h2>
-            <p className="text-sm text-[#6E7C91] leading-relaxed">
-              Chaque citoyen est maître de ses informations de santé et autorise
-              les professionnels de son choix.
-            </p>
-          </div>
-        </div>
-
-        {/* Large "Quelque chose de grand est en train d'être construit" Banner */}
-        <section className="mt-16 sm:mt-20 w-full bg-gradient-to-br from-[#0053CD] via-[#0D62DD] to-[#1E95CB] rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden text-center sm:text-left">
-          {/* Subtle background graphics */}
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-80 h-80 rounded-full bg-cyan-400/20 blur-2xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-semibold backdrop-blur-sm mb-4">
-                <Activity className="w-3.5 h-3.5" />
-                <span>Innovation &amp; Santé Numérique</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
-                Quelque chose de grand est en train d&apos;être construit
-              </h2>
-              <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
-                Une infrastructure de santé unifiée, souveraine et moderne, pensée pour
-                révolutionner l&apos;accès et la qualité des soins médicaux.
-              </p>
-            </div>
-
-            <div className="shrink-0 flex flex-col items-center sm:items-end gap-3">
-              <span className="text-xs uppercase tracking-widest text-blue-200 font-semibold">
-                Initiative technologique
-              </span>
-              <a
-                href="https://dgit-technologies.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-[#0053CD] font-bold text-sm shadow-md hover:bg-blue-50 transition-colors"
-              >
-                <span>powered by DGIT-TECHNOLOGIES</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="w-full border-t border-[#E3EDF7] bg-white py-10 px-4 sm:px-6 mt-12">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Brand & Copyright */}
-          <div className="flex flex-col items-center md:items-start gap-1">
-            <div className="flex items-center gap-2">
-              <Image
-                src="/logo.svg"
-                alt="Dotobase Logo"
-                width={24}
-                height={24}
-                className="object-contain"
-              />
-              <span className="font-bold text-sm text-[#0E1B2A]">
-                Dotobase Health Systems
-              </span>
-            </div>
-            <p className="text-xs text-[#6E7C91]">
-              © {new Date().getFullYear()} Dotobase. Plateforme nationale de dossiers médicaux électroniques.
-            </p>
-          </div>
-
-          {/* Powered by link in footer */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 text-xs font-medium text-[#6E7C91]">
+          <p className="text-xs text-blue-200/60 mt-1">
+            Visitez le site officiel de l&apos;éditeur sur{" "}
             <a
               href="https://dgit-technologies.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#0053CD] hover:underline font-semibold"
+              className="text-cyan-300 hover:underline"
             >
-              <span>Propulsé par DGIT-TECHNOLOGIES (dgit-technologies.com)</span>
+              dgit-technologies.com
+            </a>
+          </p>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full border-t border-white/10 bg-black/20 backdrop-blur-md py-6 px-6 z-10">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-200/60">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-cyan-400" />
+            <span>Dotobase Health Systems · Plateforme Médicale Sécurisée</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span>Propulsé par</span>
+            <a
+              href="https://dgit-technologies.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-300 font-semibold hover:underline inline-flex items-center gap-1"
+            >
+              <span>DGIT-TECHNOLOGIES</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>

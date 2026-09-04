@@ -5,14 +5,14 @@ import HomePage from './page';
 describe('HomePage', () => {
   it('renders Dotobase description and branding', () => {
     render(<HomePage />);
-    expect(screen.getByText(/Votre santé,/i)).toBeInTheDocument();
-    expect(screen.getByText(/est la plateforme moderne de dossiers médicaux/i)).toBeInTheDocument();
+    expect(screen.getByText(/Qu'est-ce que Dotobase \?/i)).toBeInTheDocument();
+    expect(screen.getByText(/est la future plateforme nationale de dossiers médicaux/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Dotobase/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the "Quelque chose de grand est en train d\'être construit" message', () => {
     render(<HomePage />);
-    const elements = screen.getAllByText(/Quelque chose de grand est en train d'être construit/i);
+    const elements = screen.getAllByText(/Quelque chose de grand est en train/i);
     expect(elements.length).toBeGreaterThanOrEqual(1);
   });
 
