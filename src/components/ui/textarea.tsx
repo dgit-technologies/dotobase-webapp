@@ -31,7 +31,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textare
           'w-full rounded-lg border bg-white px-3 py-2 text-sm text-[#0E1B2A]',
           'placeholder:text-[#6E7C91] resize-y',
           'transition-colors duration-200',
-          'focus:outline-none focus:ring-2 focus:ring-[#0053CD]/30 focus:border-[#0053CD]',
+          'focus:outline-none focus:ring-2 focus:ring-[#8BD2F2]/30 focus:border-[#8BD2F2]',
           'disabled:bg-[#FAFCFF] disabled:cursor-not-allowed disabled:opacity-60',
           error ? 'border-[#D14343]' : 'border-[#E3EDF7]',
           className

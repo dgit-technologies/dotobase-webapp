@@ -55,7 +55,7 @@ export function TabsList({ tabs, className }: TabsListProps) {
             'px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer',
             'border-b-2 -mb-px',
             active === tab.value
-              ? 'border-[#0053CD] text-[#0053CD]'
+              ? 'border-[#8BD2F2] text-[#0E1B2A] font-semibold'
               : 'border-transparent text-[#6E7C91] hover:text-[#0E1B2A]',
             tab.disabled && 'opacity-40 cursor-not-allowed'
           )}

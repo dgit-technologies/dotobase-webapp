@@ -9,9 +9,19 @@ Je suis Dev 1 sur le projet Dotobase. Je gère les fondations, l'authentificatio
 - M2 : Dashboard (gestion consultations, stats, alertes, modale recherche patient)
 - Infrastructure : migrations SQL, types TypeScript, seed data, GitLab CI/CD
 
-## REGLE IMPORTANTE
+## RÈGLES IMPORTANTES
+
+### 1. INTERDICTION DE TOUCHER AU BACKEND (LECTURE SEULE)
+- **NE JAMAIS modifier, créer ou supprimer de fichiers dans le backend** (`dotobase-backend`, migrations, API, DTOs, etc.).
+- **Lecture seule autorisée** : vous pouvez consulter et lire le code backend pour comprendre les API, les types et la logique.
+- **Signalement obligatoire** : dès que vous remarquez une anomalie, un bug, une incohérence ou un point à améliorer côté backend, **vous ne touchez à rien et vous le dites immédiatement à l'utilisateur**.
+
+### 2. Validation des maquettes
 Avant de développer une page, demander à l'utilisateur :
 "La maquette de cette page est-elle validée pour le dev ? Si oui, confirme. Si des modifications sont prévues, dis-le moi avant que je commence."
+
+### 3. Tests systématiques à chaque mise à jour de code
+À chaque nouvelle mise à jour ou ajout de code (composant, utilitaire, hook, action, page, flux ou correction de bug), il est **obligatoire d'écrire ou adapter immédiatement les tests correspondants** couvrant tout ce qui en découle. Aucun code ne doit être considéré terminé sans ses tests validés (`pnpm test` / `pnpm test:e2e`).
 
 ## Roadmap
 Le guide complet est dans `docs/roadmap_webapp.md`. Lis les sections MODULE 0, MODULE 1, MODULE 2.
@@ -77,6 +87,7 @@ playwright.config.ts
 ```
 
 ## Fichiers interdits
+- **NE JAMAIS toucher au backend** (`dotobase-backend/` ou tout fichier backend) — lecture seule uniquement. Tout problème ou besoin de modification doit être dit à l'utilisateur.
 - NE PAS toucher `src/app/(authenticated)/patients/` (Dev 2)
 - NE PAS toucher `src/components/patients/` (Dev 2)
 - NE PAS toucher `src/components/consultations/` (Dev 2)

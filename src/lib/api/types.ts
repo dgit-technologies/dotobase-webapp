@@ -38,9 +38,15 @@ export interface Database {
           adresse: string | null;
           telephone: string | null;
           email: string | null;
+          nom_representant?: string | null;
+          prenom_representant?: string | null;
+          fonction_representant?: string | null;
+          telephone_representant?: string | null;
+          email_representant?: string | null;
           // 'valide' immédiat si créé par un admin, 'en_attente' si issu
           // d'une demande d'inscription publique (à approuver/refuser).
           statut: 'en_attente' | 'valide' | 'refuse';
+          motif_refus?: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -453,15 +459,36 @@ export interface GenericMessageResponse {
   message: string;
 }
 
+export interface AuthMeEtablissementLien {
+  etablissement_id: string;
+  role: string;
+  est_principal: boolean;
+}
+
 /**
- * `GET /v1/auth/me` : le profil métier du compte connecté, enrichi du
- * téléphone et du type de compte. admin et directeur partagent la table
- * `medecins`, ils sortent donc avec la forme d'un médecin.
+ * Réponse brute renvoyée par le backend Nest sur `GET /v1/auth/me`.
+ * Depuis la fonctionnalité multi-profil, le compte peut porter plusieurs
+ * profils métiers simultanément (ex: admin ou médecin ayant aussi un dossier patient).
  */
-export type AuthProfile =
+export interface AuthMeResponse {
+  telephone: string;
+  type: UserType;
+  medecin?: Medecin;
+  infirmier?: Infirmier;
+  patient?: Patient;
+  etablissements?: AuthMeEtablissementLien[];
+}
+
+/**
+ * Profil normalisé du compte connecté, aplati pour utilisation directe dans la webapp.
+ */
+export type AuthProfile = (
   | (Medecin & { telephone: string; type: 'medecin' | 'admin' | 'directeur' })
   | (Infirmier & { telephone: string; type: 'infirmier' })
-  | (Patient & { telephone: string; type: 'patient' });
+  | (Patient & { telephone: string; type: 'patient' })
+) & {
+  etablissements?: AuthMeEtablissementLien[];
+};
 
 /* --------------------------------------------------------------------------
  * Payloads d'écriture — calqués sur les DTO Nest.
@@ -474,12 +501,13 @@ export type AuthProfile =
 /** Crée le compte `users` ET le profil `medecins` en une requête. */
 export interface CreateMedecinPayload {
   telephone: string;
-  password: string;
+  password?: string;
   npi?: string;
   email?: string;
   nom: string;
   prenom: string;
   specialite_id?: string;
+  etablissement_id?: string;
 }
 
 export interface UpdateMedecinPayload {
@@ -490,12 +518,13 @@ export interface UpdateMedecinPayload {
 
 export interface CreateInfirmierPayload {
   telephone: string;
-  password: string;
+  password?: string;
   npi?: string;
   email?: string;
   nom: string;
   prenom: string;
   service?: string;
+  etablissement_id?: string;
 }
 
 export interface UpdateInfirmierPayload {
@@ -695,9 +724,18 @@ export interface CreateEtablissementPayload {
   adresse?: string;
   telephone?: string;
   email?: string;
+  nom_representant?: string;
+  prenom_representant?: string;
+  fonction_representant?: string;
+  telephone_representant?: string;
+  email_representant?: string;
 }
 
 export type UpdateEtablissementPayload = Partial<CreateEtablissementPayload>;
+
+export interface RefuserEtablissementPayload {
+  motif?: string;
+}
 
 export interface CreateEtablissementSpecialitePayload {
   etablissement_id: string;

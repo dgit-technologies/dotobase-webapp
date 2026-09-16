@@ -9,11 +9,11 @@ interface BadgeProps {
 }
 
 const variants: Record<Variant, string> = {
-  default:  'bg-[#E8EFFE] text-[#0053CD]',
+  default:  'bg-[#8BD2F2]/20 text-[#0E1B2A]',
   success:  'bg-[#E6F6F0] text-[#22A06B]',
   error:    'bg-[#FCEAEA] text-[#D14343]',
   warning:  'bg-[#FEF3E2] text-[#B45309]',
-  info:     'bg-[#E3F4F7] text-[#2B8A9E]',
+  info:     'bg-[#8BD2F2]/20 text-[#0E1B2A]',
   outline:  'border border-[#E3EDF7] text-[#6E7C91] bg-transparent',
 };
 

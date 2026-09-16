@@ -26,6 +26,8 @@ export const toast = {
     sonnerToast.error(message, { description }),
   info: (message: string, description?: string) =>
     sonnerToast(message, { description }),
+  warning: (message: string, description?: string) =>
+    sonnerToast.warning ? sonnerToast.warning(message, { description }) : sonnerToast(message, { description }),
   loading: (message: string) =>
     sonnerToast.loading(message),
   dismiss: sonnerToast.dismiss,

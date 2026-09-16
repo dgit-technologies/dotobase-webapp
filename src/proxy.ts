@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { SESSION_HINT_COOKIE } from '@/lib/api/config';
 
-const PUBLIC_ROUTES = ['/', '/login', '/otp'];
+const PUBLIC_ROUTES = ['/', '/login', '/otp', '/inscrire-hopital'];
 
 /**
  * Garde de routes (proxy Next.js 16, ex-middleware).
@@ -21,17 +21,9 @@ export function proxy(request: NextRequest) {
   const isPublic = pathname === '/' || PUBLIC_ROUTES.some((route) => route !== '/' && pathname.startsWith(route));
 
   if (!hasSession && !isPublic) {
-    // Prototype mode: bypass redirect
-    // const loginUrl = request.nextUrl.clone();
-    // loginUrl.pathname = '/login';
-    // return NextResponse.redirect(loginUrl);
-  }
-
-  if (hasSession && isPublic) {
-    // Prototype mode: bypass redirect
-    // const dashboardUrl = request.nextUrl.clone();
-    // dashboardUrl.pathname = '/dashboard';
-    // return NextResponse.redirect(dashboardUrl);
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = '/login';
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next({ request });

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Clock, ShieldCheck, BriefcaseMedical } from "lucide-react";
 
@@ -70,14 +72,21 @@ export default function OTPPage() {
     <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-sans">
       {/* Header */}
       <header className="w-full bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-        <div className="text-[#1D99D4] text-xl font-bold tracking-tight">
-          Dotobase
-        </div>
+        <Link href="/" className="flex items-center" aria-label="Accueil Dotobase">
+          <Image
+            src="/Logo_written.svg"
+            alt="Dotobase"
+            width={150}
+            height={48}
+            className="h-11 w-auto object-contain"
+            priority
+          />
+        </Link>
         <div className="flex items-center gap-6">
           <a href="#" className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
             Support
           </a>
-          <button className="text-sm font-bold text-[#14578E] border border-[#14578E]/30 px-4 py-2 rounded bg-blue-50/30 hover:bg-blue-50 transition-colors">
+          <button className="text-sm font-bold text-[#0E1B2A] border border-[#8BD2F2] px-4 py-2 rounded bg-[#8BD2F2]/15 hover:bg-[#8BD2F2]/25 transition-colors">
             Emergency Access
           </button>
         </div>
@@ -92,7 +101,7 @@ export default function OTPPage() {
           <div className="bg-white rounded-xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-gray-100 px-8 py-10 relative z-10 text-center w-full">
             
             {/* Icon */}
-            <div className="mx-auto w-12 h-12 bg-[#2299D2] rounded-lg flex items-center justify-center text-white mb-6 shadow-sm">
+            <div className="mx-auto w-12 h-12 bg-[#8BD2F2] rounded-lg flex items-center justify-center text-[#0E1B2A] mb-6 shadow-sm">
               <BriefcaseMedical className="w-6 h-6" strokeWidth={2} />
             </div>
 
@@ -118,7 +127,7 @@ export default function OTPPage() {
                     value={digit}
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-11 h-12 sm:w-12 sm:h-14 bg-white border border-gray-300 rounded-md text-center text-xl font-semibold text-gray-900 focus:border-[#2299D2] focus:ring-1 focus:ring-[#2299D2] outline-none transition-all"
+                    className="w-11 h-12 sm:w-12 sm:h-14 bg-white border border-gray-300 rounded-md text-center text-xl font-semibold text-gray-900 focus:border-[#8BD2F2] focus:ring-1 focus:ring-[#8BD2F2] outline-none transition-all"
                   />
                 ))}
               </div>
@@ -132,7 +141,7 @@ export default function OTPPage() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-[#2299D2] hover:bg-[#1D86B9] text-white font-bold text-[13px] py-3.5 rounded-md transition-colors tracking-wide"
+                className="w-full bg-[#8BD2F2] hover:bg-[#74C5E9] text-[#0E1B2A] font-bold text-[13px] py-3.5 rounded-md transition-colors tracking-wide cursor-pointer"
               >
                 VALIDER
               </button>
@@ -140,7 +149,7 @@ export default function OTPPage() {
 
             {/* Resend Link */}
             <div className="mt-5">
-              <button className="text-[13px] font-bold text-[#14578E] hover:underline transition-all">
+              <button className="text-[13px] font-bold text-[#0E1B2A] hover:text-[#8BD2F2] hover:underline transition-all">
                 Renvoyer le code
               </button>
             </div>

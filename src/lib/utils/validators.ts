@@ -28,6 +28,31 @@ export function normaliserTelephone(saisie: string): string {
   return `${INDICATIF_BENIN}${chiffres}`;
 }
 
+/**
+ * Vérifie si un numéro de téléphone respecte le plan de numérotation béninois :
+ * - Nouveau plan national à 10 chiffres : commence par '01' suivi de 8 chiffres
+ * - Format traditionnel à 8 chiffres : 8 chiffres (commençant par 2, 4, 5, 6 ou 9)
+ * Gère la saisie locale ou internationale (avec ou sans indicatif +229).
+ */
+export function isTelephoneBJ(saisie: string): boolean {
+  if (!saisie || typeof saisie !== 'string') return false;
+  const compact = saisie.replace(/[\s.\-()]/g, '');
+  const chiffres = compact.replace(/\D/g, '');
+
+  let local = chiffres;
+  if (local.startsWith('229')) {
+    local = local.slice(3);
+  }
+
+  // Nouveau format béninois (10 chiffres : 01 + 8 chiffres)
+  if (/^01\d{8}$/.test(local)) return true;
+
+  // Ancien format béninois (8 chiffres : commence par 2, 4, 5, 6 ou 9)
+  if (/^[24569]\d{7}$/.test(local)) return true;
+
+  return false;
+}
+
 /** Téléphone plausible : indicatif + 6 à 14 chiffres. */
 export const telephoneSchema = z
   .string()

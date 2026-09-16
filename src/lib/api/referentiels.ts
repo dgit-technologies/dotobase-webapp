@@ -6,6 +6,7 @@ import type {
   CreateSpecialitePayload,
   Etablissement,
   EtablissementSpecialite,
+  RefuserEtablissementPayload,
   Specialite,
   UpdateEtablissementPayload,
   UpdateSpecialitePayload,
@@ -51,10 +52,13 @@ export const etablissements = {
       { method: 'PATCH' }
     ),
 
-  refuser: (id: string) =>
+  refuser: (id: string, payload?: RefuserEtablissementPayload) =>
     apiFetch<Etablissement>(
       `/etablissements/${encodeURIComponent(id)}/refuser`,
-      { method: 'PATCH' }
+      {
+        method: 'PATCH',
+        body: payload ?? {},
+      }
     ),
 };
 

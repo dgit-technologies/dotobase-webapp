@@ -1,6 +1,7 @@
 import { apiFetch, refreshSession } from '@/lib/api/client';
 import { clearSession, setAccessToken, setSessionHint } from '@/lib/api/token';
 import type {
+  AuthMeResponse,
   AuthProfile,
   GenericMessageResponse,
   LoginPayload,
@@ -59,9 +60,10 @@ export const auth = {
     return tokens;
   },
 
-  /** Profil du compte connecté (médecin / infirmier / patient). */
-  me(): Promise<AuthProfile> {
-    return apiFetch<AuthProfile>('/auth/me');
+  /** Profil du compte connecté (médecin / infirmier / patient), normalisé pour la webapp. */
+  async me(): Promise<AuthProfile> {
+    const raw = await apiFetch<AuthMeResponse | AuthProfile>('/auth/me');
+    return normalizeAuthProfile(raw);
   },
 
   /** Rejoue le refresh à partir du cookie HttpOnly. */
@@ -79,3 +81,39 @@ export const auth = {
     clearSession();
   },
 };
+
+/**
+ * Normalise la réponse de `GET /auth/me`.
+ * Gère le format multi-profil retourné par le backend NestJS
+ * ({ telephone, type, medecin?, infirmier?, patient?, etablissements? })
+ * ainsi que le format plat direct ({ id, nom, prenom, type, ... }).
+ */
+export function normalizeAuthProfile(
+  raw: AuthMeResponse | AuthProfile
+): AuthProfile {
+  if (!raw) return raw as AuthProfile;
+
+  // Si c'est déjà un profil plat contenant directement nom ou prenom
+  if ('nom' in raw || 'prenom' in raw) {
+    return raw as AuthProfile;
+  }
+
+  const multi = raw as AuthMeResponse;
+  const activeProfile =
+    (multi.type === 'medecin' || multi.type === 'admin' || multi.type === 'directeur'
+      ? multi.medecin
+      : multi.type === 'infirmier'
+        ? multi.infirmier
+        : multi.patient) ??
+    multi.medecin ??
+    multi.infirmier ??
+    multi.patient ??
+    {};
+
+  return {
+    ...activeProfile,
+    telephone: multi.telephone ?? (activeProfile as any).telephone,
+    type: multi.type ?? (activeProfile as any).type,
+    ...(multi.etablissements ? { etablissements: multi.etablissements } : {}),
+  } as AuthProfile;
+}

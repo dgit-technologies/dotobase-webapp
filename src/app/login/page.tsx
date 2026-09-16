@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Phone, Lock, Eye, EyeOff, ShieldCheck, LogIn, CircleHelp } from "lucide-react";
+import { Phone, Lock, Eye, EyeOff, ShieldCheck, LogIn, CircleHelp, Hospital } from "lucide-react";
 import { useAuth } from "@/lib/hooks/use-auth";
+import Spinner from "@/components/ui/spinner";
 import { toDisplayMessage } from "@/lib/api";
+import { toast } from "@/components/ui/toast";
 import { EXEMPLE_TELEPHONE, loginSchema, premiereErreur } from "@/lib/utils/validators";
 
 export default function LoginPage() {
@@ -13,9 +16,24 @@ export default function LoginPage() {
   const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
+
+  // Si l'utilisateur est déjà connecté, redirection automatique vers /dashboard (ou page demandée)
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      const from =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('from')
+          : null;
+      const target =
+        from && from.startsWith('/') && !from.startsWith('//')
+          ? from
+          : '/dashboard';
+      router.replace(target);
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   // Connexion staff : téléphone + mot de passe (POST /v1/auth/login).
   // Le NPI n'est plus un identifiant de connexion, et il n'y a pas d'OTP
@@ -26,20 +44,41 @@ export default function LoginPage() {
 
     const saisie = loginSchema.safeParse({ telephone, password });
     if (!saisie.success) {
-      setError(premiereErreur(saisie.error));
+      const msg = premiereErreur(saisie.error);
+      setError(msg);
+      toast.error("Formulaire invalide", msg);
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmitting(true);
 
     try {
       await login(saisie.data);
-      router.push("/dashboard");
+      toast.success("Connexion réussie", "Bienvenue sur votre espace Dotobase.");
+      const from =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('from')
+          : null;
+      const target =
+        from && from.startsWith('/') && !from.startsWith('//')
+          ? from
+          : '/dashboard';
+      router.push(target);
     } catch (err) {
-      setError(toDisplayMessage(err));
-      setIsLoading(false);
+      const msg = toDisplayMessage(err);
+      setError(msg);
+      toast.error("Échec de connexion", msg);
+      setIsSubmitting(false);
     }
   };
+
+  if (isLoading || isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#EAF5F8] to-[#F4F9F9]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center bg-gradient-to-br from-[#EAF5F8] to-[#F4F9F9] overflow-hidden">
@@ -52,7 +91,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 relative flex items-center justify-center">
           <Image 
-            src="/logo.svg" 
+            src="/logo.png" 
             alt="Dotobase Logo" 
             width={120} 
             height={120} 
@@ -76,7 +115,7 @@ export default function LoginPage() {
 
             {/* Telephone Field */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-gray-700 tracking-wide">
+              <label htmlFor="telephone" className="block text-xs font-bold text-gray-700 tracking-wide">
                 Téléphone
               </label>
               <div className="relative">
@@ -84,13 +123,14 @@ export default function LoginPage() {
                   <Phone className="h-5 w-5" strokeWidth={1.5} />
                 </div>
                 <input
+                  id="telephone"
                   type="tel"
                   required
                   autoComplete="tel"
                   value={telephone}
                   onChange={(e) => setTelephone(e.target.value)}
                   placeholder={EXEMPLE_TELEPHONE}
-                  className="block w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1E95CB]/20 focus:border-[#1E95CB] placeholder:text-gray-400 transition-colors bg-gray-50/30"
+                  className="block w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#8BD2F2]/30 focus:border-[#8BD2F2] placeholder:text-gray-400 transition-colors bg-gray-50/30"
                 />
               </div>
             </div>
@@ -98,10 +138,10 @@ export default function LoginPage() {
             {/* Password Field */}
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
-                <label className="block text-xs font-bold text-gray-700 tracking-wide">
+                <label htmlFor="password" className="block text-xs font-bold text-gray-700 tracking-wide">
                   Mot de passe
                 </label>
-                <a href="#" className="text-xs font-bold text-[#1E95CB] hover:text-[#167CA9] transition-colors">
+                <a href="#" className="text-xs font-bold text-[#0E1B2A] hover:text-[#8BD2F2] transition-colors">
                   Mot de passe oublié ?
                 </a>
               </div>
@@ -110,12 +150,13 @@ export default function LoginPage() {
                   <Lock className="h-5 w-5" strokeWidth={1.5} />
                 </div>
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   required
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1E95CB]/20 focus:border-[#1E95CB] transition-colors bg-gray-50/30"
+                  className="block w-full pl-10 pr-10 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#8BD2F2]/30 focus:border-[#8BD2F2] transition-colors bg-gray-50/30"
                 />
                 <button
                   type="button"
@@ -140,19 +181,33 @@ export default function LoginPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full mt-2 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-[#2299D2] hover:bg-[#1D86B9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2299D2] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={isSubmitting}
+              className="w-full mt-2 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-[#0E1B2A] bg-[#8BD2F2] hover:bg-[#74C5E9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8BD2F2] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
-              {isLoading ? "Connexion en cours..." : "Se connecter"}
-              {!isLoading && <LogIn className="w-4 h-4" strokeWidth={2} />}
+              {isSubmitting ? "Connexion en cours..." : "Se connecter"}
+              {!isSubmitting && <LogIn className="w-4 h-4" strokeWidth={2} />}
             </button>
           </form>
 
+          {/* Inscrire mon hôpital */}
+          <div className="mt-6 pt-5 border-t border-gray-100 text-center space-y-2">
+            <p className="text-xs text-gray-500">
+              Votre structure de santé n&apos;est pas encore inscrite ?
+            </p>
+            <Link
+              href="/inscrire-hopital"
+              className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg border border-gray-200 text-xs font-bold text-slate-700 hover:text-[#0E1B2A] hover:bg-slate-50 hover:border-[#8BD2F2] transition-colors"
+            >
+              <Hospital className="w-4 h-4 text-[#8BD2F2]" />
+              <span>Inscrire mon hôpital</span>
+            </Link>
+          </div>
+
           {/* Help Link */}
-          <div className="mt-8 pt-5 border-t border-gray-100 flex justify-center">
+          <div className="mt-4 pt-3 flex justify-center">
             <a href="#" className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-700 transition-colors">
               <CircleHelp className="w-4 h-4" strokeWidth={1.5} />
-              Besoin d'aide ?
+              Besoin d&apos;aide ?
             </a>
           </div>
         </div>

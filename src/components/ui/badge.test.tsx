@@ -10,7 +10,7 @@ describe('Badge', () => {
 
   it('applies default variant', () => {
     render(<Badge>Actif</Badge>);
-    expect(screen.getByText('Actif')).toHaveClass('text-[#0053CD]');
+    expect(screen.getByText('Actif')).toHaveClass('bg-[#8BD2F2]/20');
   });
 
   it('applies success variant', () => {

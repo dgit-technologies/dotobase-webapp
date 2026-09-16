@@ -39,6 +39,11 @@ export function libelleRole(role: UserType | null): string | undefined {
 export function nomAffiche(user: AuthProfile | null): string | undefined {
   if (!user) return undefined;
 
-  const nomComplet = `${user.prenom} ${user.nom}`.trim();
+  const prenom = user.prenom?.trim();
+  const nom = user.nom?.trim();
+  const nomComplet = [prenom, nom].filter(Boolean).join(' ').trim();
+
+  if (!nomComplet) return undefined;
+
   return user.type === 'medecin' ? `Dr. ${nomComplet}` : nomComplet;
 }

@@ -40,7 +40,7 @@ export default function Pagination({ page, totalPages, onPageChange, className }
               className={cn(
                 'flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium cursor-pointer transition-colors',
                 p === page
-                  ? 'bg-[#0053CD] text-white'
+                  ? 'bg-[#8BD2F2] text-[#0E1B2A] font-semibold'
                   : 'border border-[#E3EDF7] text-[#6E7C91] hover:bg-[#FAFCFF]'
               )}
             >

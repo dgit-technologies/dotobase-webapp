@@ -29,7 +29,7 @@ export default function Avatar({ name = '', src, size = 'md', className }: Avata
     <div
       className={cn(
         'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full',
-        'bg-[#E8EFFE] font-semibold text-[#0053CD]',
+        'bg-[#8BD2F2]/25 font-semibold text-[#0E1B2A]',
         sizes[size],
         className
       )}

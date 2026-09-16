@@ -1,16 +1,19 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
+  FolderHeart,
   ClipboardList,
-  FolderOpen,
+  UserCog,
   Settings2,
   HelpCircle,
   LogOut,
   Plus,
+  Hospital,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
@@ -18,13 +21,38 @@ interface NavItem {
   href: string;
   label: string;
   icon: React.ReactNode;
+  /** Si défini, seuls ces rôles voient cet élément de menu. */
+  roles?: string[];
+  /** Si défini, ces rôles ne voient pas cet élément de menu. */
+  excludeRoles?: string[];
 }
 
 const mainNav: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-  { href: '/patients', label: 'Patients', icon: <Users size={18} /> },
-  { href: '/consultations', label: 'Consultations', icon: <ClipboardList size={18} /> },
-  { href: '/dossiers', label: 'Dossiers', icon: <FolderOpen size={18} /> },
+  {
+    href: '/consultations',
+    label: 'Consultations',
+    icon: <ClipboardList size={18} />,
+    excludeRoles: ['admin'],
+  },
+  {
+    href: '/dossiers-medicaux',
+    label: 'Dossiers médicaux',
+    icon: <FolderHeart size={18} />,
+    excludeRoles: ['admin'],
+  },
+  {
+    href: '/personnel',
+    label: 'Personnel',
+    icon: <UserCog size={18} />,
+    roles: ['directeur'],
+  },
+  {
+    href: '/admin/demandes',
+    label: 'Hôpitaux',
+    icon: <Hospital size={18} />,
+    roles: ['admin'], // Strictement réservé au Super Admin Dotobase
+  },
 ];
 
 const bottomNav: NavItem[] = [
@@ -35,34 +63,55 @@ const bottomNav: NavItem[] = [
 interface SidebarProps {
   clinicName?: string;
   clinicType?: string;
+  userRole?: string | null;
+  isEtablissementAdmin?: boolean;
   onLogout?: () => void;
 }
 
 export default function Sidebar({
-  clinicName = 'Dotobase',
-  clinicType = 'Plateforme médicale',
+  clinicName,
+  clinicType,
+  userRole,
+  isEtablissementAdmin,
   onLogout,
 }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-60 shrink-0 flex-col border-r border-[#E3EDF7] bg-white">
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-[#E3EDF7]">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0053CD]">
-          <Plus size={20} className="text-white" strokeWidth={3} />
-        </div>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-[#0E1B2A]">{clinicName}</p>
-          <p className="truncate text-xs text-[#6E7C91]">{clinicType}</p>
-        </div>
+    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-[#E3EDF7] bg-white">
+      {/* Logo Dotobase */}
+      <div className="flex items-center justify-center px-6 py-5 border-b border-[#E3EDF7]">
+        <Link href="/dashboard" className="flex items-center justify-center w-full" aria-label="Accueil Dotobase">
+          <Image
+            src="/Logo_written.svg"
+            alt="Dotobase"
+            width={220}
+            height={70}
+            className="h-16 w-auto max-w-full object-contain"
+            priority
+          />
+        </Link>
       </div>
 
 
       {/* Navigation principale */}
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         <ul className="flex flex-col gap-1">
-          {mainNav.map((item) => {
+          {mainNav
+            .filter((item) => {
+              if (item.href === '/personnel') {
+                if (userRole === 'admin') return false;
+                return !!isEtablissementAdmin || userRole === 'directeur';
+              }
+              if (userRole && item.excludeRoles?.includes(userRole)) {
+                return false;
+              }
+              if (item.roles) {
+                return userRole ? item.roles.includes(userRole) : false;
+              }
+              return true;
+            })
+            .map((item) => {
             const isActive = pathname.startsWith(item.href);
             return (
               <li key={item.href}>
@@ -71,8 +120,8 @@ export default function Sidebar({
                   className={cn(
                     'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-[#0053CD] text-white'
-                      : 'text-[#6E7C91] hover:bg-[#F0F5FF] hover:text-[#0E1B2A]'
+                      ? 'bg-[#8BD2F2] text-[#0E1B2A] font-semibold'
+                      : 'text-[#6E7C91] hover:bg-[#8BD2F2]/15 hover:text-[#0E1B2A]'
                   )}
                 >
                   {item.icon}
@@ -96,8 +145,8 @@ export default function Sidebar({
                   className={cn(
                     'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-[#0053CD] text-white'
-                      : 'text-[#6E7C91] hover:bg-[#F0F5FF] hover:text-[#0E1B2A]'
+                      ? 'bg-[#8BD2F2] text-[#0E1B2A] font-semibold'
+                      : 'text-[#6E7C91] hover:bg-[#8BD2F2]/15 hover:text-[#0E1B2A]'
                   )}
                 >
                   {item.icon}

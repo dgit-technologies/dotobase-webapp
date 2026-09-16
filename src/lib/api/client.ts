@@ -153,7 +153,7 @@ export function refreshSession(): Promise<string | null> {
 
 /**
  * Appel typé vers l'API Nest. `path` est relatif au préfixe de version
- * (ex: `/patients/123` → `http://localhost:4000/v1/patients/123`).
+ * (ex: `/patients/123` → `http://localhost:4001/v1/patients/123`).
  *
  * Sur 401, tente un refresh puis rejoue la requête une seule fois.
  */

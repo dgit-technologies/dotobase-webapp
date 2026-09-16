@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  isTelephoneBJ,
   loginSchema,
   normaliserTelephone,
   npiSchema,
@@ -31,6 +32,27 @@ describe('normaliserTelephone', () => {
 
   it('renvoie une chaîne vide pour une saisie vide', () => {
     expect(normaliserTelephone('   ')).toBe('');
+  });
+});
+
+describe('isTelephoneBJ', () => {
+  it('valide les numéros béninois à 10 chiffres (nouveau plan avec 01)', () => {
+    expect(isTelephoneBJ('01 61 00 00 00')).toBe(true);
+    expect(isTelephoneBJ('+229 01 97 12 34 56')).toBe(true);
+    expect(isTelephoneBJ('+2290161000000')).toBe(true);
+  });
+
+  it('valide les numéros béninois à 8 chiffres (ancien plan)', () => {
+    expect(isTelephoneBJ('97 00 00 00')).toBe(true);
+    expect(isTelephoneBJ('+229 61 00 00 00')).toBe(true);
+  });
+
+  it('rejette les numéros incomplets, trop longs ou invalides', () => {
+    expect(isTelephoneBJ('01 61 00 00')).toBe(false); // Manque des chiffres
+    expect(isTelephoneBJ('12345')).toBe(false);
+    expect(isTelephoneBJ('01 61 00 00 00 99')).toBe(false); // Trop long
+    expect(isTelephoneBJ('')).toBe(false);
+    expect(isTelephoneBJ('abc')).toBe(false);
   });
 });
 

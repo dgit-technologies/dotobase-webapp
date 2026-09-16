@@ -39,7 +39,7 @@ describe('apiFetch', () => {
       query: { nom: 'Koné', prenom: undefined, sexe: '' },
     });
 
-    expect(appels()[0][0]).toBe('http://localhost:4000/v1/patients?nom=Kon%C3%A9');
+    expect(appels()[0][0]).toBe('http://localhost:4001/v1/patients?nom=Kon%C3%A9');
   });
 
   it('envoie le token en mémoire et les cookies', async () => {
@@ -109,7 +109,7 @@ describe('apiFetch', () => {
     await expect(apiFetch('/patients')).resolves.toEqual([{ id: 'patient-1' }]);
 
     expect(fetchMock).toHaveBeenCalledTimes(3);
-    expect(appels()[1][0]).toBe('http://localhost:4000/v1/auth/refresh');
+    expect(appels()[1][0]).toBe('http://localhost:4001/v1/auth/refresh');
     expect(autorisation(2)).toBe('Bearer token-neuf');
     expect(getAccessToken()).toBe('token-neuf');
   });

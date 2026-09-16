@@ -1,3 +1,4 @@
+import { apiFetch } from '@/lib/api/client';
 import { createResource } from '@/lib/api/resource';
 import type {
   CreatePatientPayload,
@@ -10,6 +11,8 @@ import type {
 export type PatientsQuery = {
   /** Recherche exacte. */
   telephone?: string;
+  /** Recherche exacte par NPI (10 chiffres). */
+  npi?: string;
   /** Recherche partielle, insensible à la casse. */
   nom?: string;
   /** Recherche partielle, insensible à la casse. */
@@ -18,17 +21,40 @@ export type PatientsQuery = {
   groupe_sanguin?: GroupeSanguin;
 };
 
-/**
- * Module `patients` du backend.
- *
- * Attention : l'API n'expose pas de recherche par NPI (le NPI n'est plus un
- * identifiant de connexion, ANIP indisponible). L'identification d'un patient
- * se fait par téléphone, par nom/prénom, ou par empreinte
- * (`biometrie.identifier`).
- */
-export const patients = createResource<
+export type PatientRechercheResult = {
+  id: string;
+  nom: string;
+  prenom: string;
+  date_naissance: string;
+  sexe: Sexe;
+  a_acces: boolean;
+};
+
+export type PatientRechercheQuery = {
+  telephone?: string;
+  npi?: string;
+};
+
+const resource = createResource<
   Patient,
   CreatePatientPayload,
   UpdatePatientPayload,
   PatientsQuery
 >('/patients');
+
+/**
+ * Module `patients` du backend.
+ *
+ * Expose les opérations standards (`list`, `get`, `create`, `update`, `remove`)
+ * ainsi que la recherche préalable non scopée (`GET /patients/recherche`).
+ */
+export const patients = {
+  ...resource,
+  /**
+   * Recherche préalable par téléphone ou NPI (exact) - non scopée par établissement.
+   * Renvoie l'identité minimale et le statut `a_acces` (l'établissement a déjà accès ou non).
+   */
+  recherche: (query: PatientRechercheQuery) =>
+    apiFetch<PatientRechercheResult>('/patients/recherche', { query }),
+};
+

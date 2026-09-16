@@ -32,25 +32,77 @@ export function subscribeToAccessToken(listener: TokenListener): () => void {
   return () => listeners.delete(listener);
 }
 
+export const SESSION_HINT_STORAGE_EXPIRY = 'dotobase_session_expires';
+
 /**
- * Pose le cookie témoin de session. Ne contient pas de token : il indique
- * seulement qu'un refresh token existe probablement côté navigateur.
+ * Pose le témoin de session. Ne contient aucun token : il indique
+ * seulement qu'un refresh token existe côté navigateur.
+ * Stocké à la fois en cookie (pour le proxy/SSR) et en localStorage
+ * pour résister aux purges ITP (7 jours max pour document.cookie sous Safari).
  */
 export function setSessionHint(): void {
-  if (typeof document === 'undefined') return;
-  document.cookie = `${SESSION_HINT_COOKIE}=1; path=/; max-age=${SESSION_HINT_MAX_AGE_S}; SameSite=Lax`;
+  if (typeof document !== 'undefined') {
+    document.cookie = `${SESSION_HINT_COOKIE}=1; path=/; max-age=${SESSION_HINT_MAX_AGE_S}; SameSite=Lax`;
+  }
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      window.localStorage.setItem(SESSION_HINT_COOKIE, '1');
+      window.localStorage.setItem(
+        SESSION_HINT_STORAGE_EXPIRY,
+        String(Date.now() + SESSION_HINT_MAX_AGE_S * 1000)
+      );
+    } catch {
+      // Ignorer si localStorage est indisponible (navigation privée stricte)
+    }
+  }
 }
 
 export function clearSessionHint(): void {
-  if (typeof document === 'undefined') return;
-  document.cookie = `${SESSION_HINT_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  if (typeof document !== 'undefined') {
+    document.cookie = `${SESSION_HINT_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  }
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      window.localStorage.removeItem(SESSION_HINT_COOKIE);
+      window.localStorage.removeItem(SESSION_HINT_STORAGE_EXPIRY);
+    } catch {
+      // Ignorer
+    }
+  }
 }
 
 export function hasSessionHint(): boolean {
-  if (typeof document === 'undefined') return false;
-  return document.cookie
-    .split(';')
-    .some((part) => part.trim().startsWith(`${SESSION_HINT_COOKIE}=1`));
+  if (typeof document !== 'undefined') {
+    const hasCookie = document.cookie
+      .split(';')
+      .some((part) => part.trim().startsWith(`${SESSION_HINT_COOKIE}=1`));
+    if (hasCookie) return true;
+  }
+
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      const val = window.localStorage.getItem(SESSION_HINT_COOKIE);
+      if (val === '1') {
+        const expStr = window.localStorage.getItem(SESSION_HINT_STORAGE_EXPIRY);
+        const exp = expStr ? Number(expStr) : NaN;
+        if (!expStr || isNaN(exp) || exp > Date.now()) {
+          // Restauration automatique du cookie si Safari ou le navigateur l'a purgé
+          if (typeof document !== 'undefined') {
+            document.cookie = `${SESSION_HINT_COOKIE}=1; path=/; max-age=${SESSION_HINT_MAX_AGE_S}; SameSite=Lax`;
+          }
+          return true;
+        } else {
+          // Expiré après 30 jours
+          window.localStorage.removeItem(SESSION_HINT_COOKIE);
+          window.localStorage.removeItem(SESSION_HINT_STORAGE_EXPIRY);
+        }
+      }
+    } catch {
+      // Ignorer
+    }
+  }
+
+  return false;
 }
 
 /** Oublie la session côté client (token en mémoire + cookie témoin). */

@@ -10,9 +10,19 @@ Je suis Dev 3 sur le projet Dotobase. Je gère les documents, les examens, le co
 - M11 : Paramètres (profil, sécurité, signature, notifications, préférences)
 - M12 : Aide (rubriques, FAQ, support)
 
-## REGLE IMPORTANTE
+## RÈGLES IMPORTANTES
+
+### 1. INTERDICTION DE TOUCHER AU BACKEND (LECTURE SEULE)
+- **NE JAMAIS modifier, créer ou supprimer de fichiers dans le backend** (`dotobase-backend`, migrations, API, DTOs, etc.).
+- **Lecture seule autorisée** : vous pouvez consulter et lire le code backend pour comprendre les API, les types et la logique.
+- **Signalement obligatoire** : dès que vous remarquez une anomalie, un bug, une incohérence ou un point à améliorer côté backend, **vous ne touchez à rien et vous le dites immédiatement à l'utilisateur**.
+
+### 2. Validation des maquettes
 Avant de développer une page, demander à l'utilisateur :
 "La maquette de cette page est-elle validée pour le dev ? Si oui, confirme. Si des modifications sont prévues, dis-le moi avant que je commence."
+
+### 3. Tests systématiques à chaque mise à jour de code
+À chaque nouvelle mise à jour ou ajout de code (composant, utilitaire, hook, action, page, flux ou correction de bug), il est **obligatoire d'écrire ou adapter immédiatement les tests correspondants** couvrant tout ce qui en découle. Aucun code ne doit être considéré terminé sans ses tests validés (`pnpm test` / `pnpm test:e2e`).
 
 ## Roadmap
 Le guide complet est dans `docs/roadmap_webapp.md`. Lis les sections MODULE 7, MODULE 8, MODULE 9, MODULE 11, MODULE 12.
@@ -83,6 +93,7 @@ packages/supabase/tests/rls.test.sql
 ```
 
 ## Fichiers interdits
+- **NE JAMAIS toucher au backend** (`dotobase-backend/` ou tout fichier backend) — lecture seule uniquement. Tout problème ou besoin de modification doit être dit à l'utilisateur.
 - NE PAS toucher `src/app/login/` (Dev 1)
 - NE PAS toucher `src/app/otp/` (Dev 1)
 - NE PAS toucher `src/components/ui/` (Dev 1 les crée, tu les utilises)
