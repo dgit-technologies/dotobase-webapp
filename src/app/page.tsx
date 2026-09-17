@@ -91,8 +91,8 @@ export default function HomePage() {
               </h2>
 
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                <strong className="text-slate-900 font-semibold">Dotobase</strong> est la
-                future plateforme nationale de dossiers médicaux électroniques (DME). Elle est
+                <strong className="text-slate-900 font-semibold">Dotobase </strong>est la
+                plateforme nationale de gestion de dossiers médicaux électroniques (DME). Elle est
                 conçue pour unifier et sécuriser l&apos;ensemble du parcours de soins : centralisation
                 des antécédents, suivi des consultations, ordonnances dématérialisées et résultats
                 d&apos;examens. Elle offrira aux professionnels de santé un outil de travail collaboratif
